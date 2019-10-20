@@ -1,0 +1,59 @@
+---
+resources:
+  - name: ((project_name))-repository
+    type: git
+    icon: github-circle
+    source:
+      uri: ((repository_uri))
+  - name: terraform-image
+    type: registry-image
+    icon: docker
+    source:
+      repository: hashicorp/terraform
+      tag: 0.12.12
+
+jobs:
+  - name: terraform-plan
+    public: true
+    serial: true
+    plan:
+      - get: ((project_name))-repository
+        trigger: true
+      - get: terraform-image
+      - task: terraform-plan
+        image: terraform-image
+        config:
+          platform: linux
+          inputs:
+            - name: ((project_name))-repository
+              path: /
+          params:
+            AWS_ACCESS_KEY_ID: ((aws_access_key_id))
+            AWS_SECRET_ACCESS_KEY: ((aws_secret_access_key))
+          run:
+            path: /bin/sh
+            args:
+              - -exc
+              - cd terraform && terraform init && terraform plan
+  - name: terraform-apply
+    public: true
+    serial: true
+    plan:
+      - get: ((project_name))-repository
+        passed: [terraform-plan]
+      - get: terraform-image
+      - task: terraform-apply
+        image: terraform-image
+        config:
+          platform: linux
+          inputs:
+            - name: ((project_name))-repository
+              path: /
+          params:
+            AWS_ACCESS_KEY_ID: ((aws_access_key_id))
+            AWS_SECRET_ACCESS_KEY: ((aws_secret_access_key))
+          run:
+            path: /bin/sh
+            args:
+              - -exc
+              - cd terraform && terraform init && terraform apply -auto-approve

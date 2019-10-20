@@ -1,0 +1,26 @@
+---
+resources:
+  - name: ((project_name))-repository
+    type: git
+    icon: github-circle
+    source:
+      uri: ((repository_uri))
+  - name: ((project_name))-image
+    type: docker-image
+    icon: docker
+    source:
+      repository: 078782364901.dkr.ecr.eu-west-1.amazonaws.com/fargatetest
+      aws_access_key_id: ((aws_access_key_id))
+      aws_secret_access_key: ((aws_secret_access_key))
+
+jobs:
+  - name: build-and-push
+    public: true
+    serial: true
+    plan:
+      - get: ((project_name))-repository
+        trigger: true
+      - put: ((project_name))-image
+        params:
+          build: ((project_name))-repository/app
+          tag_file: ((project_name))-repository/.git/short_ref
