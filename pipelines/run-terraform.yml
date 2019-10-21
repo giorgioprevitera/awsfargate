@@ -38,7 +38,8 @@ jobs:
               terraform init && \
               terraform validate && \
               terraform fmt -check -recursive && \
-              terraform plan"
+              terraform plan \
+                -var project_name=((project_name))"
             ]
   - name: terraform-apply
     public: true
@@ -63,5 +64,7 @@ jobs:
               "-exc",
               "cd terraform && \
               terraform init && \
-              terraform apply -auto-approve"
+              terraform apply \
+                -auto-approve \
+                -var project_name=((project_name))"
             ]

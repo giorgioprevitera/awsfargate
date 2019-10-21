@@ -9,7 +9,7 @@ locals {
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "fargatetest"
+    Name = "${var.project_name}"
   }
 }
 
@@ -19,7 +19,7 @@ resource "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
   vpc_id            = aws_vpc.main.id
   tags = {
-    Name = "fargatetest-private"
+    Name = "${var.project_name}-private"
   }
 }
 
@@ -31,6 +31,6 @@ resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   map_public_ip_on_launch = true
   tags = {
-    Name = "fargatetest-public"
+    Name = "${var.project_name}-public"
   }
 }

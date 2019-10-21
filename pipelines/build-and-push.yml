@@ -9,7 +9,7 @@ resources:
     type: docker-image
     icon: docker
     source:
-      repository: 078782364901.dkr.ecr.eu-west-1.amazonaws.com/fargatetest
+      repository: 078782364901.dkr.ecr.eu-west-1.amazonaws.com/((project_name))
       aws_access_key_id: ((aws_access_key_id))
       aws_secret_access_key: ((aws_secret_access_key))
 

@@ -1,3 +1,3 @@
 resource "aws_ecr_repository" "fargatetest" {
-  name = "fargatetest"
+  name = "${var.project_name}"
 }
